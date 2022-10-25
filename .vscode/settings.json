@@ -1,0 +1,29 @@
+{
+  "python.autoComplete.extraPaths": [
+    "./backend/app"
+  ],
+  "terminal.integrated.env.osx": {
+    "PYTHONPATH": "${workspaceFolder}/backend/app",
+  },
+  "terminal.integrated.env.windows": {
+    "PYTHONPATH": "${workspaceFolder}/backend/app",
+  },
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  "eslint.workingDirectories": [
+    {
+      "mode": "auto"
+    }
+  ],
+  "[python]": {
+    "editor.formatOnSave": true
+  },
+  "python.formatting.provider": "yapf",
+  "python.linting.enabled": true,
+  "python.linting.flake8Enabled": true,
+  "svg.preview.background": "transparent",
+  "python.analysis.extraPaths": [
+    "./backend/app"
+  ]
+}
