@@ -10,7 +10,7 @@ from app.api import deps
 router = APIRouter()
 
 
-@router.get("/", response_model=schemas.UserList)
+@router.get("/", summary="获取用户列表", response_model=schemas.UserList)
 def read_users(
     db: Session = Depends(deps.get_db),
     skip: int = 0,
@@ -19,23 +19,17 @@ def read_users(
     order: str = '',
     current_user: models.User = Depends(deps.get_current_active_superuser),
 ) -> Any:
-  """
-  获取用户列表
-  """
   users = crud.user.get_users(db, skip=skip, limit=limit, filter=filter, order=order)
   return users
 
 
-@router.post("/", response_model=schemas.User)
+@router.post("/", summary="创建用户", response_model=schemas.User)
 def create_user(
     *,
     db: Session = Depends(deps.get_db),
     user_in: schemas.UserCreate,
     current_user: models.User = Depends(deps.get_current_active_superuser),
 ) -> Any:
-  """
-  创建用户
-  """
   user = crud.user.get_by_username(db, username=user_in.username)
   if user:
     raise HTTPException(
@@ -46,7 +40,7 @@ def create_user(
   return user
 
 
-@router.put("/me", response_model=schemas.User)
+@router.put("/me", summary="更新当前用户信息", response_model=schemas.User)
 def update_user_me(
     *,
     db: Session = Depends(deps.get_db),
@@ -55,9 +49,6 @@ def update_user_me(
     email: EmailStr = Body(None),
     current_user: models.User = Depends(deps.get_current_active_user),
 ) -> Any:
-  """
-  更新当前用户信息
-  """
   current_user_data = jsonable_encoder(current_user)
   user_in = schemas.UserUpdate(**current_user_data)
   if password is not None:
@@ -70,29 +61,23 @@ def update_user_me(
   return user
 
 
-@router.get("/me", response_model=schemas.UserMe)
+@router.get("/me", summary="获取当前用户信息", response_model=schemas.UserMe)
 def read_user_me(
     db: Session = Depends(deps.get_db),
     current_user: models.User = Depends(deps.get_current_active_user),
 ) -> Any:
-  """
-  获取当前用户信息
-  """
   permissions = crud.user.get_permissions_by_userid(db, user_id=current_user.id)
   ret = jsonable_encoder(current_user)
   ret["permissions"] = permissions
   return ret
 
 
-@router.get("/{user_id}", response_model=schemas.User)
+@router.get("/{user_id}", summary="根据ID获取用户信息", response_model=schemas.User)
 def read_user_by_id(
     user_id: int,
     current_user: models.User = Depends(deps.get_current_active_user),
     db: Session = Depends(deps.get_db),
 ) -> Any:
-  """
-  根据ID获取用户信息
-  """
   user = crud.user.get(db, id=user_id)
   if user == current_user:
     return user
@@ -101,7 +86,7 @@ def read_user_by_id(
   return user
 
 
-@router.put("/{user_id}", response_model=schemas.User)
+@router.put("/{user_id}", summary="更新用户信息", response_model=schemas.User)
 def update_user(
     *,
     db: Session = Depends(deps.get_db),
@@ -109,9 +94,6 @@ def update_user(
     user_in: schemas.UserUpdate,
     current_user: models.User = Depends(deps.get_current_active_superuser),
 ) -> Any:
-  """
-  更新用户信息
-  """
   user = crud.user.get(db, id=user_id)
   if not user:
     raise HTTPException(
@@ -122,12 +104,9 @@ def update_user(
   return user
 
 
-@router.delete("/{user_id}", response_model=schemas.User)
+@router.delete("/{user_id}", summary="删除用户", response_model=schemas.User)
 def delete_user(*, db: Session = Depends(deps.get_db), user_id: int,
                 current_user: models.User = Depends(deps.get_current_active_superuser)):
-  """
-  删除用户
-  """
   user = crud.user.get(db, id=user_id)
   if not user:
     raise HTTPException(status_code=404, detail="用户不存在")

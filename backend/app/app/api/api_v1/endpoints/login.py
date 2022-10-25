@@ -14,7 +14,7 @@ from app.core.security import get_password_hash, verify_password
 router = APIRouter()
 
 
-@router.post("/login/access-token", response_model=schemas.Token)
+@router.post("/login/access-token", summary="登录", response_model=schemas.Token)
 def login_access_token(db: Session = Depends(deps.get_db), form_data: OAuth2PasswordRequestForm = Depends()) -> Any:
   """
   OAuth2 compatible token login, get an access token for future requests
@@ -31,22 +31,16 @@ def login_access_token(db: Session = Depends(deps.get_db), form_data: OAuth2Pass
   }
 
 
-@router.post("/login/test-token", response_model=schemas.User)
+@router.post("/login/test-token", response_model=schemas.User, summary="测试Token")
 def test_token(current_user: models.User = Depends(deps.get_current_user)) -> Any:
-  """
-  测试Token
-  """
   return current_user
 
 
-@router.post("/reset-password/", response_model=schemas.Msg)
+@router.post("/reset-password/", summary="重置密码", response_model=schemas.Msg)
 def reset_password(current_password: str = Body(...),
                    new_password: str = Body(...),
                    db: Session = Depends(deps.get_db),
                    current_user: models.User = Depends(deps.get_current_active_user)) -> Any:
-  """
-  重置密码
-  """
   if not verify_password(current_password, current_user.password):
     raise HTTPException(status_code=400, detail="输入的原始密码错误")
   hashed_password = get_password_hash(new_password)
