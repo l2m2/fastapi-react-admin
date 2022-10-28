@@ -1,11 +1,11 @@
-from sqlalchemy import Boolean, Column, Integer, String
+from sqlalchemy import Boolean, Column, String
 from app.db.base_class import Base
+from app.mixins.common import IDMixin, AuditMixin
 
 
-class User(Base):
+class User(Base, IDMixin, AuditMixin):
   __tablename__ = "auth_user"
 
-  id = Column(Integer, primary_key=True, index=True)
   username = Column(String(20), unique=True, index=True, nullable=False)
   fullname = Column(String(20))
   email = Column(String)

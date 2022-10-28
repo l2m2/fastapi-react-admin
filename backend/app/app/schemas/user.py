@@ -1,6 +1,6 @@
 from typing import Optional, List
 
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, constr
 
 
 # Shared properties
@@ -15,8 +15,8 @@ class UserBase(BaseModel):
 
 # Properties to receive via API on creation
 class UserCreate(UserBase):
-  username: str
-  password: str
+  username: constr(min_length=4, max_length=12, regex="^[a-zA-Z0-9_-]+$")  # noqa: F722
+  password: constr(min_length=8, max_length=30)
 
 
 # Properties to receive via API on update

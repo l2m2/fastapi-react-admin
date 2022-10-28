@@ -58,3 +58,7 @@ $ prestart.bat # Windows
 $ cd backend
 $ start.bat # Windows
 ```
+
+## Swagger Docs
+
+http://localhost:8000/docs
